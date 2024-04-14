@@ -1,0 +1,9 @@
+Grupo de 2 integrantes:
+
+nombre: Eugenio
+apellido: Arcana
+email: eugenio.arcana@mi.unc.edu.ar
+
+nombre: Facundo
+apellido: Cejas
+email: facundo.cejas@mi.unc.edu.ar
