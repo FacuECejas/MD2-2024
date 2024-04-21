@@ -23,17 +23,22 @@ int assertOrden(Grafo G, u32* Orden){
     u32 n = NumeroDeVertices(G);
     u32 ordenAux[n];
     for (u32 i = 0; i < n; i++){
-        ordenAux[i] = Orden[i];
+        ordenAux[i] = 0;
     }
-    qsort(ordenAux, n, sizeof(u32), comparador_ascendente_u32);
     for (u32 i = 0; i < n; i++){
-        if (ordenAux[i] != i){
+        if (Orden[i] >= n){
+            return -1;
+        }
+        ordenAux[Orden[i]]++;
+    }
+    for (u32 i = 0; i < n; i++){
+        if (ordenAux[i] != 1){
             return -1;
         }
     }
     return 0;
+} //O(n)
 
-}
 
 u32 Greedy(Grafo G, u32* Orden){
     u32 n = NumeroDeVertices(G);
@@ -49,24 +54,23 @@ u32 Greedy(Grafo G, u32* Orden){
         u32 v = Orden[i];
         u32 j = 0;
         u32 vecino = Vecino(j, v, G);
-        u32 coloresUsados[n + 1];
-        for(u32 i = 0; i < n + 1; i++){
-            coloresUsados[i] = 0;
-        }
+        
+        u32* coloresUsados = calloc(n + 1, sizeof(u32));
         coloresUsados[0] = 1;
+
         while(vecino != ERROR){
             coloresUsados[Color(vecino, G)] = 1; 
             j++;
             vecino = Vecino(j, v, G);
-        }
+        } //O( d(v))
+
         u32 menorColorDisp = 0;
-        for (u32 i = 0; i < n + 1; i++){
-            if (coloresUsados[i] == 0){
-                menorColorDisp = i;
-                break;
-            }
-        }
+        while(coloresUsados[menorColorDisp] == 1){
+            menorColorDisp++;
+        } //O(n)
+
         AsignarColor(menorColorDisp, v, G);
+        free(coloresUsados);
     } //O(n^2)
 
     color mayorColor = 0;
@@ -78,3 +82,5 @@ u32 Greedy(Grafo G, u32* Orden){
 
     return mayorColor;
 } //O(n^2)
+
+//Problema: Para el grafo más grande, el comprobar orden nos da un segmentation fault, especificamente en la parte de declerar un array de tamaño n.
