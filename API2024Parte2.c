@@ -6,19 +6,6 @@
 
 #define ERROR UINT_MAX
 
-int comparador_ascendente_u32(const void *a, const void *b) {
-    const u32 *elemento_a = (const u32 *)a;
-    const u32 *elemento_b = (const u32 *)b;
-    
-    if (*elemento_a < *elemento_b) {
-        return -1; // Colocar 'a' antes que 'b'
-    } else if (*elemento_a > *elemento_b) {
-        return 1; // Colocar 'a' después que 'b'
-    } else {
-        return 0; // 'a' y 'b' son iguales
-    }
-}
-
 int assertOrden(Grafo G, u32* Orden){
     u32 n = NumeroDeVertices(G);
     u32 ordenAux[n];
@@ -87,5 +74,3 @@ u32 Greedy(Grafo G, u32* Orden){
 } //O(n + n * d(v)) = O(n * d(v)) = O(2m) = O(m) -> del handshaking lemma
 
 //Problema: Para el grafo más grande, el comprobar orden nos da un segmentation fault, especificamente en la parte de declerar un array de tamaño n.
-
-//Borrar comparador_ascendente_u32
