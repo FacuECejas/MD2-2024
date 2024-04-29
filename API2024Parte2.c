@@ -43,44 +43,49 @@ int assertOrden(Grafo G, u32* Orden){
 u32 Greedy(Grafo G, u32* Orden){
     u32 n = NumeroDeVertices(G);
 
-    int err = assertOrden(G, Orden); //O(nlogn), en el peor caso O(n^2)
+    int err = assertOrden(G, Orden); //O(n)
     if (err == -1){
         return ERROR;
     }
 
     AsignarColor(1, Orden[0], G);
     
+    color mayorColor = 1;
     for (u32 i = 1; i < n; i++){
         u32 v = Orden[i];
         u32 j = 0;
         u32 vecino = Vecino(j, v, G);
+
+        u32 d = Grado(v, G);
         
-        u32* coloresUsados = calloc(n + 1, sizeof(u32));
+        u32* coloresUsados = calloc(d, sizeof(u32));
         coloresUsados[0] = 1;
 
         while(vecino != ERROR){
-            coloresUsados[Color(vecino, G)] = 1; 
+            if (Color(vecino, G) != 0){
+                coloresUsados[Color(vecino, G) - 1] = 1;
+            }
             j++;
             vecino = Vecino(j, v, G);
-        } //O( d(v))
+        } //O(d(v))
 
         u32 menorColorDisp = 0;
         while(coloresUsados[menorColorDisp] == 1){
             menorColorDisp++;
-        } //O(n)
+        } //O(d(v)))
 
-        AsignarColor(menorColorDisp, v, G);
-        free(coloresUsados);
-    } //O(n^2)
-
-    color mayorColor = 0;
-    for (u32 i = 0; i < n; i++){
-        if (Color(i, G) > mayorColor){
-            mayorColor = Color(i, G);
+        AsignarColor(menorColorDisp + 1, v, G);
+        
+        if (menorColorDisp + 1 > mayorColor){
+            mayorColor = menorColorDisp + 1;
         }
-    } //O(n)
+
+        free(coloresUsados);
+    } //O(n * d(v))
 
     return mayorColor;
-} //O(n^2)
+} //O(n + n * d(v)) = O(n * d(v)) = O(2m) = O(m) -> del handshaking lemma
 
 //Problema: Para el grafo más grande, el comprobar orden nos da un segmentation fault, especificamente en la parte de declerar un array de tamaño n.
+
+//Borrar comparador_ascendente_u32
