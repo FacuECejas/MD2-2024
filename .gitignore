@@ -2,3 +2,4 @@ examples/
 test
 tests.c
 trash
+.vscode/

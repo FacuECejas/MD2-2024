@@ -46,7 +46,6 @@ u32 Greedy(Grafo G, u32* Orden){
         u32 d = Grado(v, G);
         
         u32* coloresUsados = calloc(d, sizeof(u32));
-        coloresUsados[0] = 1;
 
         while(vecino != ERROR){
             if (Color(vecino, G) != 0){
