@@ -8,10 +8,7 @@
 
 int assertOrden(Grafo G, u32* Orden){
     u32 n = NumeroDeVertices(G);
-    u32 ordenAux[n];
-    for (u32 i = 0; i < n; i++){
-        ordenAux[i] = 0;
-    }
+    u32* ordenAux = calloc(n, sizeof(u32));
     for (u32 i = 0; i < n; i++){
         if (Orden[i] >= n){
             return -1;
@@ -23,6 +20,7 @@ int assertOrden(Grafo G, u32* Orden){
             return -1;
         }
     }
+    free(ordenAux);
     return 0;
 } //O(n)
 
@@ -113,13 +111,16 @@ void RadixSort2(u32** arr, u32 n){
     for (u32 exp = 1; max/exp > 0; exp *= 10){
         CountSort2(arr, n, exp);
     }
+}//O(b*n) -> b = cantidad de digitos de max (nunca va a ser n teniendo vertices del 0 al n-1)
+ // => O(n)
 
+ //Reverse para u32**:
+void Reverse2(u32** arr, u32 n){
     u32* aux[n];
     for (u32 i = 0; i < n; i++){
         aux[i] = calloc(2, sizeof(u32));
     }
 
-    //Invertir el orden
     for (u32 i = 0; i < n; i++){
         aux[i][0] = arr[i][0];
         aux[i][1] = arr[i][1];
@@ -130,8 +131,7 @@ void RadixSort2(u32** arr, u32 n){
         arr[i][1] = aux[n - i - 1][1];
         free(aux[n - i - 1]);
     }
-}//O(b*n) -> b = cantidad de digitos de max (nunca va a ser n teniendo vertices del 0 al n-1)
- // => O(n)
+}//O(n)
 
 char GulDukat(Grafo G,u32* Orden){
     u32 n = NumeroDeVertices(G);
@@ -218,8 +218,11 @@ char GulDukat(Grafo G,u32* Orden){
     free(M_m);
 
     RadixSort2(v4, j);
+    Reverse2(v4, j);
     RadixSort2(v2, k);
+    Reverse2(v2, k);
     RadixSort2(vI, l);
+    Reverse2(vI, l);
 
     for (u32 i = 0; i < n; i++){
         if (i < j){
