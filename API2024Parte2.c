@@ -245,7 +245,70 @@ char GulDukat(Grafo G,u32* Orden){
     free(vI);
 
     return '0';
-}
+} //O(n)
+
+char ElimGarak(Grafo G, u32* Orden){
+    u32 n = NumeroDeVertices(G);
+
+    color maxColor = 0;
+    for (u32 i = 0; i < n; i++){
+        if (Color(i, G) > maxColor){
+            maxColor = Color(i, G);
+        }
+    }
+
+    u32** colorCantidad = malloc(maxColor * sizeof(u32*));
+    for (u32 i = 0; i < maxColor; i++){
+        colorCantidad[i] = malloc(2 * sizeof(u32));
+        colorCantidad[i][0] = i + 1;
+        colorCantidad[i][1] = 0;
+    }
+    u32** verticesPorColor = malloc(maxColor * sizeof(u32*));
+    for (u32 i = 0; i < maxColor; i++){
+        verticesPorColor[i] = calloc(n, sizeof(u32));
+    }
+
+    for (u32 i = 0; i < n; i++){
+        color c = Color(i, G);
+        colorCantidad[c - 1][1]++;
+        verticesPorColor[c - 1][colorCantidad[c - 1][1] - 1] = i;
+    }
+
+    u32 cantCol1 = colorCantidad[0][1];
+    u32 cantCol2 = colorCantidad[1][1];
+    RadixSort2(colorCantidad, maxColor);
+
+    u32 indice = 0;
+    for (u32 i = 0; i < maxColor; i++){
+        color colorI = colorCantidad[i][0];
+        u32 cant = colorCantidad[i][1];
+        if (colorI != 1 && colorI != 2){
+            for (u32 j = 0; j < cant; j++){
+                Orden[indice] = verticesPorColor[colorI - 1][j];
+                indice++;
+            }
+        }
+    } // Notar que este for anidado es, en el peor caso, O(n + n) = O(n)
+
+
+    for (u32 i = indice; i < indice + cantCol2; i++){
+        Orden[i] = verticesPorColor[1][i - indice];
+    }
+    indice += cantCol2;
+    for (u32 i = indice; i < indice + cantCol1; i++){
+        Orden[i] = verticesPorColor[0][i - indice];
+    }
+
+    for (u32 i = 0; i < maxColor; i++){
+        free(verticesPorColor[i]);
+        free(colorCantidad[i]);
+    }
+    free(verticesPorColor);
+    free(colorCantidad);
+
+    return '0';
+} //O(n)
 
 
 //Problema: Para el grafo más grande, el comprobar orden nos da un segmentation fault, especificamente en la parte de declerar un array de tamaño n.
+//Falta: En elimgarak, devolver '1' en casos de error.
