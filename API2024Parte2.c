@@ -34,6 +34,9 @@ u32 Greedy(Grafo G, u32* Orden){
         return ERROR;
     }
 
+    for (u32 i = 0; i < n; i++){
+        AsignarColor(0, i, G);
+    }
     AsignarColor(1, Orden[0], G);
     
     color mayorColor = 1;
