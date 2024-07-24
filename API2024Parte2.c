@@ -123,13 +123,13 @@ char GulDukat(Grafo G,u32* Orden){
     u32** vI = malloc(l * sizeof(u32*));
     for (u32 i = 0; i < n; i++){
         if (i < j){
-            v4[i] = calloc(2, sizeof(u32)); //vertices y M(x)
+            v4[i] = calloc(2, sizeof(u32)); //colores y M(x)
         }
         if (i < k){
-            v2[i] = calloc(2, sizeof(u32)); //vertices y m(x) + M(x)
+            v2[i] = calloc(2, sizeof(u32)); //colores y m(x) + M(x)
         }
         if (i < l){
-            vI[i] = calloc(2, sizeof(u32)); //vertices y m(x)
+            vI[i] = calloc(2, sizeof(u32)); //colores y m(x)
         }
         if (i >= j && i >= k && i >= l) break;
     }
